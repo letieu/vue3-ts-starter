@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <h2 class="text-xl font-bold">Login</h2>
       <div class='text-sm text-left leading-3 text-red-500'>
-        <p v-for='(error, key) in authStore.error' :key='error'> {{ key }} {{ error[0] }} </p>
+        <p v-for='error in authStore.getError' :key='error'> {{ error[0] }} </p>
       </div>
       
       <el-form :model="formData" :rules="rules" ref='form'>

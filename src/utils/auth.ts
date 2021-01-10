@@ -5,14 +5,13 @@ import axios from "@/plugins/axios"
 
 export async function me() {
   const token = jwtUtil.getToken()
+  console.log(token)
   if (!token) {
     return
   }
 
   axiosUtil.setTokenHeader(token)
-  const res = await axios.get('/user')
-  useAuthStore().user = res.data.user
 
-  jwtUtil.saveToken(res.data.user.token)
-  axiosUtil.setTokenHeader(res.data.user.token)
+  const res = await axios.get('/auth/me')
+  useAuthStore().user = res.data.user
 }

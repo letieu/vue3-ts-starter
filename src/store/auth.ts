@@ -6,7 +6,7 @@ import axiosUtil from "@/utils/axios"
 
 interface AuthState {
   user: User | null
-  error: any
+  error: Object | string
 }
 
 export const useAuthStore = defineStore({
@@ -14,10 +14,17 @@ export const useAuthStore = defineStore({
 
   state: (): AuthState => ({
     user: null,
-    error: null
+    error: ''
   }),
 
   getters: {
+    getError() {
+      if (this.error instanceof String || typeof this.error == 'string') {
+        return { error: [this.error] }
+      }
+
+      return this.error
+    }
   },
 
   actions: {
@@ -29,7 +36,7 @@ export const useAuthStore = defineStore({
 
     async login(payload: LoginPayload): Promise<boolean> {
       try {
-        const res = await axios.post("/users/login", {
+        const res = await axios.post("/auth/login", {
           user: payload
         })
         this.user = res.data.user
@@ -38,7 +45,7 @@ export const useAuthStore = defineStore({
         axiosUtil.setTokenHeader(res.data.user.token)
         return true
       } catch (e) {
-        this.error = e.response.data.errors
+        this.error = e.response.data.error
         return false
       }
     },
@@ -47,7 +54,7 @@ export const useAuthStore = defineStore({
       axiosUtil.deleteTokenHeader()
 
       try {
-        const res = await axios.post("/users", {
+        const res = await axios.post("/auth/register", {
           user: payload
         })
 
@@ -57,7 +64,7 @@ export const useAuthStore = defineStore({
 
         return true
       } catch (error) {
-        this.error = error.response.data.errors
+        this.error = error.response.data.error
         return false
       }
     }

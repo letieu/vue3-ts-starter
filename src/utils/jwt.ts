@@ -2,7 +2,12 @@ import config from './config'
 import axios from '@/plugins/axios'
 
 export const getToken = () => {
-  return window.localStorage.getItem(config.tokenKey);
+  let token = window.localStorage.getItem(config.tokenKey);
+  if (token == 'undefined') {
+    token = null
+  }
+
+  return token
 };
 
 export const saveToken = (token: string) => {
